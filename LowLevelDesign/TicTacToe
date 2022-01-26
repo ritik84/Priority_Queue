@@ -1,0 +1,130 @@
+Problem Description:
+
+/*
+
+Design TicTacToe Game for two players.
+
+*/
+
+Solution:
+
+#include <bits/stdc++.h>
+using namespace std;
+
+class init{
+	public:
+    	char board[3][3];
+    	static int turn;
+    	init(){
+            for(int i=0;i<3;i++){
+				for(int j=0;j<3;j++){
+					board[i][j] = '-';
+				}
+			}
+        }
+		void printBoard(){
+		    cout<<"Turn "<<turn++<<endl;
+			for(int i=0;i<3;i++){
+				for(int j=0;j<3;j++){
+					cout<<board[i][j]<<" ";
+				}
+				cout<<endl;
+			}
+		}
+};
+
+int init:: turn =1;
+
+class User{
+	public: 
+		string name;
+		bool win;
+		User(string name){
+			this->name = name;
+			this->win = false;
+		}
+};
+
+bool userWin(init obj,int r,int c,char ch){
+    //check row
+    bool row = true,col = true, d1 = true,d2 = true;
+    for(int i=0;i<3;i++){
+        if(obj.board[i][c]!=ch){
+            row = false;
+        }
+    }
+    //check col
+    for(int i=0;i<3;i++){
+        if(obj.board[r][i]!=ch){
+            col = false;
+        }
+    }
+    for(int i=0;i<3;i++){
+        if(obj.board[i][i]!=ch){
+            d1 = false;
+        }
+    }
+    for(int i=2;i>=0;i--){
+        if(obj.board[i][i]!=ch){
+            d2 = false;
+        }
+    }
+    return (row || col || d1 || d2);
+}
+
+string PlayGame(User u1,User u2,init obj){
+    int row,col;
+    srand(time(NULL));
+    int turn = 0;
+    int cnt = 0;
+    while(cnt<9 || !u1.win || !u2.win){
+        
+        row = 0+rand()%3;
+        col = 0+rand()%3;
+        
+        if(turn == 0){
+            if(obj.board[row][col]=='-'){
+                cout<<row<<" "<<col<<endl;
+            	obj.board[row][col] = 'X';
+                obj.printBoard();
+                if(userWin(obj,row,col,'X')){
+                    u1.win = true;
+                    return u1.name + " wins!!!";
+                    //break;
+                }
+                turn = !turn;
+                cnt++;
+            }
+        }
+        else{
+            if(obj.board[row][col]=='-'){
+                cout<<row<<" "<<col<<endl;
+            	obj.board[row][col] = 'O';
+                obj.printBoard();
+                if(userWin(obj,row,col,'O')){
+                    u2.win = true;
+                    return u2.name + " wins!!!";
+                    //break;
+                }
+                turn = !turn;
+                cnt++;
+            }
+        }
+        
+        if(cnt == 9){
+            return "Draw";
+        }
+    }
+    //return "Draw";
+}
+
+int main() {
+	init obj;
+	//obj.printBoard();
+    string user1,user2;
+    cin>>user1>>user2;
+    User u1(user1);
+    User u2(user2);
+    cout<<PlayGame(u1,u2,obj)<<endl;
+	return 0;
+}
