@@ -1,0 +1,79 @@
+Problem Description:
+
+/*
+
+Given a string s, rearrange the characters of s so that any two adjacent characters are not the same.
+
+Return any possible rearrangement of s or return "" if not possible.
+
+ 
+
+Example 1:
+
+Input: s = "aab"
+Output: "aba"
+Example 2:
+
+Input: s = "aaab"
+Output: ""
+
+*/
+
+Solution:
+
+class Solution {
+public:
+    string reorganizeString(string s) {
+        
+        int freq_arr[26];
+        for(int i=0;i<26;i++){
+            freq_arr[i] = 0;
+        }
+        int max_freq = -1 ;
+        // now i will store the freq of each element in the freq arr
+        for(int i=0;i<s.length();i++){
+            freq_arr[s[i]-'a']++;
+            if(freq_arr[s[i]-'a'] > max_freq){
+                max_freq = freq_arr[s[i]-'a'];
+            }
+        }
+        // now i will check that max_freq is les than (n+1)/2 ,where n is length of string
+        // otherwise its not possible to arrange a string in that order
+        
+        if(max_freq > (s.length()+1)/2){
+            return "";
+        }
+        
+        // otherwise i will create a max heap using priority queue;
+        priority_queue<pair<int,char>> pq;
+        for(int i=0;i<26;i++){
+            if(freq_arr[i]>0){
+                pq.push({freq_arr[i],i+'a'});
+            }
+        }
+        string ans="";
+        while(!pq.empty()){
+            if(pq.size()>1){
+                auto top_ele1 = pq.top();
+                pq.pop();
+                auto top_ele2 = pq.top();
+                pq.pop();
+                ans.push_back(top_ele1.second);
+                ans.push_back(top_ele2.second);
+                if(top_ele1.first>1){
+                    top_ele1.first--;
+                    pq.push(top_ele1);
+                }
+                if(top_ele2.first>1){
+                    top_ele2.first--;
+                    pq.push(top_ele2);
+                }
+            }
+            else{
+                ans.push_back(pq.top().second);
+                pq.pop();
+            }
+        }
+        return ans;
+    }
+};

@@ -1,0 +1,38 @@
+Problem Description:
+
+/*
+
+Given K sorted arrays arranged in the form of a matrix of size K*K. The task is to merge them into one sorted array.
+Example 1:
+
+Input:
+K = 3
+arr[][] = {{1,2,3},{4,5,6},{7,8,9}}
+Output: 1 2 3 4 5 6 7 8 9
+
+*/
+
+Solution:
+
+typedef pair<int, pair<int, int>> ppi;
+#define M_P make_pair 
+int *mergeKArrays(int arr[][N], int k)
+{
+    // pair value->key, r, c
+    int *res = new int[k*k];
+    int i =0;
+    priority_queue<ppi, vector<ppi>, greater<ppi>> pq;
+    for(int r=0; r<k; r++)
+        pq.push(M_P(arr[r][0], M_P(r, 0))); // c is 0
+    while(!pq.empty()){
+        ppi curr = pq.top();
+        // cout<<curr.first<<"\n";
+        pq.pop();
+        res[i++] = curr.first;
+        int r = curr.second.first;
+        int c = curr.second.second;
+        if(c<k-1)
+            pq.push(M_P(arr[r][c+1], M_P(r, c+1)));
+    }
+    return res;
+}
